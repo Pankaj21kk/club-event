@@ -1,37 +1,58 @@
-const express = require('express');
+const express = require("express");
 
-const cors = require('cors');
-const dotenv = require('dotenv');
-const connectDB  = require("./connection")
+const cors = require("cors");
+const dotenv = require("dotenv");
+const connectDB = require("./connection");
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+const allowedOrigins = [
+  "https://healthy-rock.outray.app",
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:5175",
+  "http://localhost:5176",
+  "http://localhost:5177",
+  "http://localhost:5178",
+  "http://localhost:5179",
+];
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  }),
+);
+
 app.use(express.json());
 
-
-
-connectDB("mongodb://localhost:27017/club-event").then(()=>{
+connectDB("mongodb://localhost:27017/club-event")
+  .then(() => {
     console.log("MongoDB Connected");
-}).catch((err)=>{
+  })
+  .catch((err) => {
     console.error("MongoDB connection error:", err);
-})
+  });
 // Routes (Placeholder)
-app.get('/', (req, res) => {
-    res.send('CampusPulse API Running');
+app.get("/", (req, res) => {
+  res.send("CampusPulse API Running");
 });
 
 // Import Routes
-const eventRoutes = require('./routes/events');
-const authRoutes = require('./routes/auth');
+const eventRoutes = require("./routes/events");
+const authRoutes = require("./routes/auth");
 
-
-app.use('/api/events', eventRoutes);
-app.use('/api/auth', authRoutes);
+app.use("/api/events", eventRoutes);
+app.use("/api/auth", authRoutes);
 
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

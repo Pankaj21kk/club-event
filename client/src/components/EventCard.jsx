@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Clock, MapPin, Users } from 'lucide-react';
 
-const EventCard = ({ event, onRegister }) => {
-    const { title, description, venue, startTime, totalSeats, registeredCount, status, _id } = event;
+const EventCard = ({ event, onRegister, isRegistered }) => {
+    const { title, description, venue, startTime, totalSeats, registeredCount, status, _id, entryFee } = event;
 
     // Basic date formatting
     const formattedTime = new Date(startTime).toLocaleString('en-US', {
@@ -13,9 +13,10 @@ const EventCard = ({ event, onRegister }) => {
     const isLive = status === 'LIVE';
     const isFull = registeredCount >= totalSeats;
 
+    
     return (
-        <div className={`bg-white rounded-xl shadow-lg overflow-hidden border ${isLive ? 'border-red-500 ring-2 ring-red-100' : 'border-gray-200'} transition hover:shadow-xl`}>
-            <div className="p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 transition hover:shadow-xl flex flex-col h-full">
+            <div className="p-6 flex-1 flex flex-col">
                 <div className="flex justify-between items-start mb-4">
                     <div>
                         {isLive && (
@@ -29,18 +30,18 @@ const EventCard = ({ event, onRegister }) => {
                                 UPCOMING
                             </span>
                         )}
-                        {!isLive && status === 'ENDED' && (
+                         {!isLive && status === 'ENDED' && (
                             <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 mb-2">
                                 ENDED
                             </span>
                         )}
-                        <h3 className="text-xl font-bold text-gray-900">{title}</h3>
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h3>
                     </div>
                 </div>
-
-                <p className="text-gray-600 mb-4 line-clamp-2">{description}</p>
-
-                <div className="space-y-2 text-sm text-gray-500 mb-6">
+                
+                <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2 flex-grow">{description}</p>
+                
+                <div className="space-y-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
                     <div className="flex items-center gap-2">
                         <Clock className="w-4 h-4" />
                         <span>{formattedTime}</span>
@@ -53,20 +54,33 @@ const EventCard = ({ event, onRegister }) => {
                         <Users className="w-4 h-4" />
                         <span>{registeredCount} / {totalSeats} (Waitlist Avail)</span>
                     </div>
+                     <div className="flex items-center gap-2 font-semibold">
+                        <span className={`px-2 py-1 rounded text-xs ${!entryFee || entryFee === 0 ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                            {!entryFee || entryFee === 0 ? 'Free Entry' : `₹${entryFee}`}
+                        </span>
+                    </div>
                 </div>
 
-                <button
-                    onClick={() => onRegister(_id)}
-                    disabled={status === 'ENDED'}
-                    className={`w-full py-2 px-4 rounded-lg font-semibold transition ${status === 'ENDED'
-                            ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                            : isFull
-                                ? 'bg-orange-100 text-orange-700 hover:bg-orange-200'
-                                : 'bg-indigo-600 text-white hover:bg-indigo-700'
-                        }`}
-                >
-                    {status === 'ENDED' ? 'Event Ended' : isFull ? 'Join Waitlist' : 'Register Now'}
-                </button>
+                <div className="mt-auto">
+                {isRegistered ? (
+                     <div className="block w-full text-center py-2 px-4 rounded-lg font-semibold bg-green-100 text-green-700 border border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800 cursor-default">
+                         Registered
+                     </div>
+                ) : (
+                    <Link
+                    to={`/events/${_id}`}
+                    className={`block w-full text-center py-2 px-4 rounded-lg font-semibold transition text-white ${
+                        status === 'ENDED' 
+                        ? 'bg-gray-400 cursor-not-allowed dark:bg-gray-600'
+                        : isFull 
+                            ? 'bg-orange-500 hover:bg-orange-600 dark:bg-orange-600'
+                            : 'bg-primary hover:opacity-90'
+                    }`}
+                    >
+                    {status === 'ENDED' ? 'Event Ended' : isFull ? 'Join Waitlist' : 'View & Register'}
+                    </Link>
+                )}
+                </div>
             </div>
         </div>
     );

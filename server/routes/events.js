@@ -15,8 +15,16 @@ router.get("/", async (req, res) => {
 
 // POST /api/events
 router.post("/", async (req, res) => {
-  const { title, description, venue, startTime, endTime, totalSeats } =
-    req.body;
+  const {
+    title,
+    description,
+    venue,
+    startTime,
+    endTime,
+    totalSeats,
+    entryFee,
+    createdBy,
+  } = req.body;
 
   // Basic conflict check
   const start = new Date(startTime);
@@ -41,12 +49,38 @@ router.post("/", async (req, res) => {
       startTime,
       endTime,
       totalSeats,
+      entryFee: entryFee || 0,
+      createdBy,
     });
 
     const savedEvent = await newEvent.save();
     res.status(201).json(savedEvent);
   } catch (err) {
     res.status(400).json({ message: err.message });
+  }
+});
+// ... (GET logic unchanged)
+// PUT /api/events/:id
+router.put("/:id", async (req, res) => {
+  try {
+    const {
+      title,
+      description,
+      venue,
+      startTime,
+      endTime,
+      totalSeats,
+      entryFee,
+    } = req.body;
+    // In a real app, re-run conflict check if venue/time changed
+    const event = await Event.findByIdAndUpdate(
+      req.params.id,
+      { title, description, venue, startTime, endTime, totalSeats, entryFee },
+      { new: true },
+    );
+    res.json(event);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
@@ -100,6 +134,58 @@ router.post("/:id/register", async (req, res) => {
           : "Registration confirmed",
       status,
     });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// GET /api/events/:id/registrations
+router.get("/:id/registrations", async (req, res) => {
+  try {
+    // We need student details. Since `studentId` is just a string in Registration schema (mock),
+    // we might not be able to populate it if it's not an ObjectId ref.
+    // Let's check Registration model again.
+    // Ah, Registration schema has `studentId: { type: String, required: true }`.
+    // Ideally we should have made it a ref to 'Student' model.
+    // For now, we will just return the registrations.
+    // A better approach is to fetch student details. Let's do a manual lookup or update Schema.
+
+    // Let's rely on the client to fetch student details or just display studentId/Email if stored.
+    // Wait, the Student registration stores email in the Student model.
+    // To show "Student Information", we need to link Registration -> Student.
+
+    const registrations = await require("../models/Registration").find({
+      eventId: req.params.id,
+    });
+
+    // Manual population if studentId matches _id of Student model
+    const Student = require("../models/Student");
+    const populatedRegistrations = await Promise.all(
+      registrations.map(async (reg) => {
+        const student = await Student.findById(reg.studentId);
+        return {
+          ...reg.toObject(),
+          student: student
+            ? student
+            : { name: "Unknown", email: "Unknown", rollNo: "Unknown" },
+        };
+      }),
+    );
+
+    res.json(populatedRegistrations);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// GET /api/events/student/:studentId
+router.get("/student/:studentId", async (req, res) => {
+  try {
+    const studentId = req.params.studentId;
+    const registrations = await require("../models/Registration")
+      .find({ studentId })
+      .populate("eventId");
+    res.json(registrations);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

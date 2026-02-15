@@ -8,10 +8,12 @@ const eventSchema = new mongoose.Schema(
     startTime: { type: Date, required: true },
     endTime: { type: Date, required: true },
     totalSeats: { type: Number, required: true },
+    entryFee: { type: Number, default: 0 },
     registeredCount: { type: Number, default: 0 },
     waitingList: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Registration" },
     ],
+    createdBy: { type: String, required: true }, // Store Club Head ID (mock auth)
     // status can be computed, but we might store it for caching if needed.
     // For now, we'll compute it or use a virtual.
   },
