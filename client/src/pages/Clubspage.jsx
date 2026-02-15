@@ -1,7 +1,7 @@
 import React from "react";
 
 // 🔹 Your Cleaned Club Data
-const clubsData = [
+export const clubsData = [
   {
     id: 1,
     club_name: "SPICE Society",
@@ -74,23 +74,28 @@ const clubsData = [
   },
 ];
 
-const ClubsPage = () => {
+const ClubsPage = ({ isHome = false }) => {
+  // If isHome, show only first 3 clubs
+  const clubsToShow = isHome ? clubsData.slice(0, 3) : clubsData;
+
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-6">
+    <div className={`${isHome ? '' : 'min-h-screen bg-gray-50 py-12'} px-6`}>
       
-      {/* Page Header */}
-      <div className="text-center mb-14">
-        <h1 className="text-4xl font-bold text-gray-800">
-          NITJ Clubs & Societies
-        </h1>
-        <p className="mt-4 text-gray-600">
-          Explore student clubs, connect with coordinators, and join activities.
-        </p>
-      </div>
+      {/* Page Header - Hide if on Home */}
+      {!isHome && (
+        <div className="text-center mb-14">
+            <h1 className="text-4xl font-bold text-gray-800">
+            NITJ Clubs & Societies
+            </h1>
+            <p className="mt-4 text-gray-600">
+            Explore student clubs, connect with coordinators, and join activities.
+            </p>
+        </div>
+      )}
 
       {/* Clubs Grid */}
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {clubsData.map((club) => (
+        {clubsToShow.map((club) => (
           <div
             key={club.id}
             className="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 p-6 flex flex-col justify-between"

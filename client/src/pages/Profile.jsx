@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { Clock, MapPin } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [role, setRole] = useState(null);
-  const [registrations, setRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -14,41 +12,9 @@ const Profile = () => {
     if (storedUser) {
       setUser(storedUser);
       setRole(storedRole);
-      
-      if (storedRole === 'student') {
-        fetchRegistrations(storedUser._id);
-      } else {
-        setLoading(false);
-      }
-    } else {
-      setLoading(false);
     }
+    setLoading(false);
   }, []);
-
-  const fetchRegistrations = async (studentId) => {
-    try {
-      const res = await axios.get(`http://localhost:5000/api/events/student/${studentId}`);
-      setRegistrations(res.data);
-      setLoading(false);
-    } catch (err) {
-      console.error(err);
-      setLoading(false);
-    }
-  };
-
-  const handleDeregister = async (eventId) => {
-    if(!window.confirm("Are you sure you want to deregister?")) return;
-    try {
-        await axios.delete(`http://localhost:5000/api/events/${eventId}/register`, {
-            data: { studentId: user._id }
-        });
-        // Remove from list
-        setRegistrations(registrations.filter(r => r.eventId._id !== eventId));
-        alert("Deregistered successfully");
-    } catch (err) {
-        alert(err.response?.data?.message || "Failed to deregister");
-    }
-  };
 
   if (!user) return <div className="text-center mt-10">Please login to view profile.</div>;
   if (loading) return <div className="text-center mt-10">Loading profile...</div>;
@@ -103,152 +69,73 @@ const Profile = () => {
           </>
         )}
       </div>
+
+      <div className="mt-8 pt-6 border-t border-gray-100 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-3">Social Profiles</h3>
+                <div className="flex flex-wrap gap-4">
+                    {user.githubProfile && (
+                        <a href={user.githubProfile} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-gray-700 hover:text-black">
+                            <i className="ri-github-fill text-xl" /> GitHub
+                        </a>
+                    )}
+                    {user.linkedinProfile && (
+                        <a href={user.linkedinProfile} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-blue-700 hover:text-blue-900">
+                            <i className="ri-linkedin-box-fill text-xl" /> LinkedIn
+                        </a>
+                    )}
+                    {user.xProfile && (
+                        <a href={user.xProfile} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-black hover:opacity-70">
+                            <i className="ri-twitter-x-fill text-xl" /> X
+                        </a>
+                    )}
+                    {user.portfolioUrl && (
+                        <a href={user.portfolioUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-orange-600 hover:text-orange-700">
+                            <i className="ri-global-line text-xl" /> Portfolio
+                        </a>
+                    )}
+                    {!user.githubProfile && !user.linkedinProfile && !user.xProfile && !user.portfolioUrl && (
+                        <p className="text-sm text-gray-400 italic">No social profiles added.</p>
+                    )}
+                </div>
+            </div>
+            <div className="flex items-end justify-end">
+                <a href="/profile/edit" className="inline-flex items-center gap-2 px-6 py-2 bg-gray-100 text-gray-800 rounded-lg hover:bg-gray-200 transition font-medium">
+                    <i className="ri-edit-line" /> Edit Profile
+                </a>
+            </div>
+      </div>
     </div>
 
     {role === 'student' && (
-  <div>
-    <h2 className="text-xl font-semibold text-gray-800 mb-8">
-      Your Event History
-    </h2>
+      <div className="mt-8">
+        <Link 
+          to="/my-events" 
+          className="inline-flex items-center gap-2 px-6 py-3 bg-black border-2 border-black text-white font-bold text-sm uppercase tracking-widest rounded-sm hover:bg-orange-600 hover:border-orange-600 transition-colors"
+        >
+          <i className="ri-calendar-event-line" /> View My Events
+        </Link>
+      </div>
+    )}
 
-    {registrations.length === 0 ? (
-      <p className="text-gray-500">
-        No registered events found.
-      </p>
-    ) : (
-      <div className="space-y-6">
-        {registrations.map(reg => {
-          const event = reg.eventId;
-          if (!event) return null;
-
-          const isPast = new Date(event.endTime) < new Date();
-
-          return (
-            <div
-              key={reg._id}
-              className="bg-white border border-gray-200 rounded-lg p-6 flex justify-between items-start"
-            >
-              <div>
-                <h3 className="text-lg font-semibold text-gray-800">
-                  {event.title}
-                </h3>
-
-                <p className="text-gray-500 text-sm mt-1">
-                  {event.venue}
-                </p>
-
-                <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
-                  <span className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    {new Date(event.startTime).toLocaleDateString()}
-                  </span>
-
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      reg.status === 'CONFIRMED'
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-orange-100 text-orange-700'
-                    }`}
-                  >
-                    {reg.status}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex flex-col items-end gap-3">
-                {isPast ? (
-                  <span className="text-xs px-3 py-1 bg-gray-100 text-gray-600 rounded-full">
-                    Past
-                  </span>
-                ) : (
-                  <>
-                    <span className="text-xs px-3 py-1 bg-green-100 text-green-700 rounded-full">
-                      Upcoming
-                    </span>
-
-                    <button
-                      onClick={() => handleDeregister(event._id)}
-                      className="text-xs text-red-500 hover:text-red-700 transition"
-                    >
-                      Deregister
-                    </button>
-                  </>
-                )}
-              </div>
-            </div>
-          );
-        })}
+    {role === 'club-head' && (
+      <div className="mt-8 flex gap-4">
+        <Link 
+          to="/my-events" 
+          className="inline-flex items-center gap-2 px-6 py-3 bg-black border-2 border-black text-white font-bold text-sm uppercase tracking-widest rounded-sm hover:bg-orange-600 hover:border-orange-600 transition-colors"
+        >
+          <i className="ri-calendar-event-line" /> My Events
+        </Link>
+        <Link 
+          to="/events/create" 
+          className="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-black text-black font-bold text-sm uppercase tracking-widest rounded-sm hover:bg-black hover:text-white transition-colors"
+        >
+          <i className="ri-add-line" /> Create Event
+        </Link>
       </div>
     )}
   </div>
-)}
-
-
-      {role === 'club-head' && (
-         <MyEvents clubHeadId={user._id} />
-      )}
-    </div>
   );
-};
-
-
-const MyEvents = ({ clubHeadId }) => {
-    const [events, setEvents] = useState([]);
-    
-    useEffect(() => {
-        const fetchMyEvents = async () => {
-             try {
-                const res = await axios.get(`http://localhost:5000/api/events/club-head/${clubHeadId}`);
-                setEvents(res.data);
-             } catch (err) {
-                 console.error("Failed to fetch my events", err);
-             }
-        };
-        fetchMyEvents();
-    }, [clubHeadId]);
-
-    const handleDelete = async (eventId) => {
-        if(window.confirm("Are you sure you want to delete this event?")) {
-            try {
-                await axios.delete(`http://localhost:5000/api/events/${eventId}`);
-                setEvents(events.filter(e => e._id !== eventId));
-            } catch (err) {
-                alert("Failed to delete event");
-            }
-        }
-    };
-
-    return (
-        <div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">My Created Events</h2>
-            {events.length === 0 ? (
-                 <p className="text-gray-500">You haven't created any events yet.</p>
-            ) : (
-                <div className="grid gap-6">
-                    {events.map(event => (
-                        <div key={event._id} className="bg-white shadow rounded-lg p-6 flex justify-between items-center">
-                            <div>
-                                <h3 className="text-xl font-bold">{event.title}</h3>
-                                <p className="text-gray-600 mb-2">{event.venue} | {new Date(event.startTime).toLocaleString()}</p>
-                                <p className="text-sm text-gray-500">Registered: {event.registeredCount} / {event.totalSeats}</p>
-                            </div>
-                            <div className="flex gap-3">
-                                <a href={`/events/${event._id}/registrations`} className="px-4 py-2 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 font-medium">
-                                    View Requests
-                                </a>
-                                <a href={`/events/edit/${event._id}`} className="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 font-medium">
-                                    Edit
-                                </a>
-                                <button onClick={() => handleDelete(event._id)} className="px-4 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200 font-medium">
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
-    );
 };
 
 export default Profile;

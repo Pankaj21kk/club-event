@@ -51,6 +51,9 @@ const EventRegistrations = () => {
                                     Email
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Socials
+                                </th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Status
                                 </th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -69,6 +72,33 @@ const EventRegistrations = () => {
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <div className="text-sm text-gray-500">{reg.student?.email || '-'}</div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <div className="flex gap-3">
+                                            {reg.student?.githubProfile && (
+                                                <a href={reg.student.githubProfile} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black transition-colors" title="GitHub">
+                                                    <i className="ri-github-fill text-lg"></i>
+                                                </a>
+                                            )}
+                                            {reg.student?.linkedinProfile && (
+                                                <a href={reg.student.linkedinProfile} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-blue-700 transition-colors" title="LinkedIn">
+                                                    <i className="ri-linkedin-box-fill text-lg"></i>
+                                                </a>
+                                            )}
+                                            {reg.student?.xProfile && (
+                                                <a href={reg.student.xProfile} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black transition-colors" title="X (Twitter)">
+                                                    <i className="ri-twitter-x-fill text-lg"></i>
+                                                </a>
+                                            )}
+                                            {reg.student?.portfolioUrl && (
+                                                <a href={reg.student.portfolioUrl} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-orange-600 transition-colors" title="Portfolio">
+                                                    <i className="ri-global-line text-lg"></i>
+                                                </a>
+                                            )}
+                                            {!reg.student?.githubProfile && !reg.student?.linkedinProfile && !reg.student?.xProfile && !reg.student?.portfolioUrl && (
+                                                <span className="text-xs text-gray-300">-</span>
+                                            )}
+                                        </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${

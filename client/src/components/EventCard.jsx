@@ -13,9 +13,26 @@ const EventCard = ({ event, onRegister, isRegistered }) => {
     const isLive = status === 'LIVE';
     const isFull = registeredCount >= totalSeats;
 
+    const DEFAULT_IMAGE = 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&h=400&fit=crop';
+    const displayImage = event.imageUrl || DEFAULT_IMAGE;
     
     return (
         <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 transition hover:shadow-xl flex flex-col h-full">
+            {/* Event Image */}
+            <div className="h-48 overflow-hidden bg-neutral-100">
+                <img 
+                    src={displayImage} 
+                    alt={title}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                        // Fallback to gradient if image fails to load
+                        e.target.style.display = 'none';
+                        e.target.parentElement.classList.add('bg-gradient-to-br', 'from-orange-500', 'to-orange-600');
+                        e.target.parentElement.classList.remove('bg-neutral-100');
+                    }}
+                />
+            </div>
+            
             <div className="p-6 flex-1 flex flex-col">
                 <div className="flex justify-between items-start mb-4">
                     <div>
@@ -54,6 +71,12 @@ const EventCard = ({ event, onRegister, isRegistered }) => {
                         <Users className="w-4 h-4" />
                         <span>{registeredCount} / {totalSeats} (Waitlist Avail)</span>
                     </div>
+                    {event.createdBy?.clubName && (
+                        <div className="flex items-center gap-2">
+                            <i className="ri-team-line w-4 h-4" />
+                            <span className="text-xs">By {event.createdBy.clubName}</span>
+                        </div>
+                    )}
                      <div className="flex items-center gap-2 font-semibold">
                         <span className={`px-2 py-1 rounded text-xs ${!entryFee || entryFee === 0 ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
                             {!entryFee || entryFee === 0 ? 'Free Entry' : `₹${entryFee}`}

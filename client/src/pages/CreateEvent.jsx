@@ -12,6 +12,8 @@ const CreateEvent = () => {
         endTime: '',
         totalSeats: '',
         entryFee: 0,
+        imageUrl: '',
+        requiredFields: [],
         createdBy: JSON.parse(localStorage.getItem('user'))?._id
     });
     const [isFree, setIsFree] = useState(true);
@@ -79,10 +81,15 @@ const CreateEvent = () => {
                         onChange={handleChange}
                     >
                         <option value="">Select Venue</option>
-                        <option value="Main Auditorium">Main Auditorium</option>
-                        <option value="IT Building - Lab 1">IT Building - Lab 1</option>
-                        <option value="LHC">LHC</option>
                         <option value="Student Activity Centre">Student Activity Centre</option>
+                        <option value="IT Building - Lab 1">IT Building </option>
+                        <option value="Central Lawn">Central Lawn</option>
+                        <option value="Mega Ground">Mega Ground</option>
+                        <option value="MBH Ground">MBH Ground</option>
+                        <option value="OAT">OAT</option>
+                        <option value="CSH">CSH</option>
+                        <option value="VCH">VCH</option>
+                        <option value="Others">Others</option>
                     </select>
                 </div>
 
@@ -162,6 +169,47 @@ const CreateEvent = () => {
                             onChange={handleChange}
                         />
                     )}
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700">Event Image URL</label>
+                    <input
+                        type="url"
+                        name="imageUrl"
+                        placeholder="https://example.com/event-image.jpg"
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border"
+                        value={formData.imageUrl}
+                        onChange={handleChange}
+                    />
+                    <p className="mt-1 text-xs text-gray-500">Optional: Enter a URL for the event banner image</p>
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Required Student Profiles (for Registration)</label>
+                    <div className="grid grid-cols-2 gap-4">
+                        {['githubProfile', 'linkedinProfile', 'xProfile', 'portfolioUrl'].map((field) => (
+                            <label key={field} className="inline-flex items-center">
+                                <input
+                                    type="checkbox"
+                                    className="form-checkbox text-indigo-600 rounded"
+                                    checked={formData.requiredFields.includes(field)}
+                                    onChange={(e) => {
+                                        const { checked } = e.target;
+                                        setFormData(prev => ({
+                                            ...prev,
+                                            requiredFields: checked 
+                                                ? [...prev.requiredFields, field]
+                                                : prev.requiredFields.filter(f => f !== field)
+                                        }));
+                                    }}
+                                />
+                                <span className="ml-2 text-sm text-gray-700 capitalize">
+                                    {field.replace('Profile', '').replace('Url', '')}
+                                </span>
+                            </label>
+                        ))}
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">Students will be prompted to add these to their profile if missing.</p>
                 </div>
 
                 <div className="flex justify-end">

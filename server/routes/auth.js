@@ -43,7 +43,7 @@ router.post("/register/student", async (req, res) => {
     }
 
     const newStudent = new Student({
-      name,
+      name: name.toUpperCase(),
       rollNo,
       branch,
       year,

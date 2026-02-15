@@ -49,9 +49,11 @@ app.get("/", (req, res) => {
 // Import Routes
 const eventRoutes = require("./routes/events");
 const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/users");
 
 app.use("/api/events", eventRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

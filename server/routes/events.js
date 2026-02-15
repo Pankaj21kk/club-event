@@ -5,7 +5,9 @@ const Event = require("../models/Event");
 // GET /api/events
 router.get("/", async (req, res) => {
   try {
-    const events = await Event.find().sort({ startTime: 1 });
+    const events = await Event.find()
+      .populate("createdBy", "clubName designation")
+      .sort({ startTime: 1 });
     // computed status is included via virtuals
     res.json(events);
   } catch (err) {
@@ -23,6 +25,8 @@ router.post("/", async (req, res) => {
     endTime,
     totalSeats,
     entryFee,
+    imageUrl,
+    requiredFields,
     createdBy,
   } = req.body;
 
@@ -50,6 +54,8 @@ router.post("/", async (req, res) => {
       endTime,
       totalSeats,
       entryFee: entryFee || 0,
+      imageUrl: imageUrl || "",
+      requiredFields: requiredFields || [],
       createdBy,
     });
 
@@ -71,11 +77,23 @@ router.put("/:id", async (req, res) => {
       endTime,
       totalSeats,
       entryFee,
+      imageUrl,
+      requiredFields,
     } = req.body;
     // In a real app, re-run conflict check if venue/time changed
     const event = await Event.findByIdAndUpdate(
       req.params.id,
-      { title, description, venue, startTime, endTime, totalSeats, entryFee },
+      {
+        title,
+        description,
+        venue,
+        startTime,
+        endTime,
+        totalSeats,
+        entryFee,
+        imageUrl,
+        requiredFields,
+      },
       { new: true },
     );
     res.json(event);
@@ -168,6 +186,28 @@ router.delete("/:id/register", async (req, res) => {
     }
 
     res.json({ message: "Deregistered successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// DELETE /api/events/:id (Delete event)
+router.delete("/:id", async (req, res) => {
+  try {
+    const event = await Event.findById(req.params.id);
+    if (!event) {
+      return res.status(404).json({ message: "Event not found" });
+    }
+
+    // Delete all registrations for this event
+    await require("../models/Registration").deleteMany({
+      eventId: req.params.id,
+    });
+
+    // Delete the event
+    await Event.findByIdAndDelete(req.params.id);
+
+    res.json({ message: "Event and all registrations deleted successfully" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
