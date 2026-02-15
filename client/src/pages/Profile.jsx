@@ -53,103 +53,136 @@ const Profile = () => {
   if (!user) return <div className="text-center mt-10">Please login to view profile.</div>;
   if (loading) return <div className="text-center mt-10">Loading profile...</div>;
 
-  return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
-      <div className="bg-white dark:bg-gray-800 shadow rounded-lg p-6 mb-8 border dark:border-gray-700">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Profile</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700 dark:text-gray-300">
-          <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Name</p>
-            <p className="font-medium text-lg">{user.name}</p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Email</p>
-            <p className="font-medium text-lg">{role === 'student' ? user.email : user.collegeEmail}</p>
-          </div>
-          {role === 'student' && (
-            <>
-              <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Roll No</p>
-                <p className="font-medium">{user.rollNo}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Branch/Year</p>
-                <p className="font-medium">{user.branch} - {user.year}</p>
-              </div>
-            </>
-          )}
-           {role === 'club-head' && (
-            <>
-              <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Club Name</p>
-                <p className="font-medium">{user.clubName}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Designation</p>
-                <p className="font-medium">{user.designation}</p>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
+ return (
+  <div className="max-w-5xl mx-auto px-6 py-12">
 
-      {role === 'student' && (
+    {/* Profile Card */}
+    <div className="bg-white border border-gray-200 rounded-xl p-8 mb-12">
+      <h1 className="text-2xl font-semibold text-gray-800 mb-8">
+        Profile
+      </h1>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-gray-700">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Your Event History</h2>
-          
-          {registrations.length === 0 ? (
-            <p className="text-gray-500 dark:text-gray-400">No registered events found.</p>
-          ) : (
-            <div className="space-y-4">
-              {registrations.map(reg => {
-                const event = reg.eventId;
-                if(!event) return null; // Event might have been deleted
-                
-                const isPast = new Date(event.endTime) < new Date();
-                
-                return (
-                  <div key={reg._id} className={`bg-white dark:bg-gray-800 shadow rounded-lg p-4 border-l-4 ${isPast ? 'border-gray-400' : 'border-green-500'} dark:border-gray-600`}>
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{event.title}</h3>
-                        <p className="text-gray-600 dark:text-gray-300 mb-2">{event.venue}</p>
-                        <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                          <span className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            {new Date(event.startTime).toLocaleDateString()}
-                          </span>
-                          <span className={`px-2 py-0.5 rounded text-xs font-bold ${reg.status === 'CONFIRMED' ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800'}`}>
-                            {reg.status}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-end gap-2">
-                        {isPast ? (
-                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                             Past Event
-                           </span>
-                        ) : (
-                            <>
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                             Upcoming
-                           </span>
-                           <button 
-                                onClick={() => handleDeregister(event._id)}
-                                className="text-xs text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 underline"
-                            >
-                                Deregister
-                            </button>
-                           </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
+          <p className="text-sm text-gray-500">Name</p>
+          <p className="font-medium text-lg">{user.name}</p>
         </div>
-      )}
+
+        <div>
+          <p className="text-sm text-gray-500">Email</p>
+          <p className="font-medium text-lg">
+            {role === 'student' ? user.email : user.collegeEmail}
+          </p>
+        </div>
+
+        {role === 'student' && (
+          <>
+            <div>
+              <p className="text-sm text-gray-500">Roll No</p>
+              <p className="font-medium">{user.rollNo}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Branch / Year</p>
+              <p className="font-medium">
+                {user.branch} - {user.year}
+              </p>
+            </div>
+          </>
+        )}
+
+        {role === 'club-head' && (
+          <>
+            <div>
+              <p className="text-sm text-gray-500">Club Name</p>
+              <p className="font-medium">{user.clubName}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Designation</p>
+              <p className="font-medium">{user.designation}</p>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+
+    {role === 'student' && (
+  <div>
+    <h2 className="text-xl font-semibold text-gray-800 mb-8">
+      Your Event History
+    </h2>
+
+    {registrations.length === 0 ? (
+      <p className="text-gray-500">
+        No registered events found.
+      </p>
+    ) : (
+      <div className="space-y-6">
+        {registrations.map(reg => {
+          const event = reg.eventId;
+          if (!event) return null;
+
+          const isPast = new Date(event.endTime) < new Date();
+
+          return (
+            <div
+              key={reg._id}
+              className="bg-white border border-gray-200 rounded-lg p-6 flex justify-between items-start"
+            >
+              <div>
+                <h3 className="text-lg font-semibold text-gray-800">
+                  {event.title}
+                </h3>
+
+                <p className="text-gray-500 text-sm mt-1">
+                  {event.venue}
+                </p>
+
+                <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
+                  <span className="flex items-center gap-1">
+                    <Clock className="w-4 h-4" />
+                    {new Date(event.startTime).toLocaleDateString()}
+                  </span>
+
+                  <span
+                    className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      reg.status === 'CONFIRMED'
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-orange-100 text-orange-700'
+                    }`}
+                  >
+                    {reg.status}
+                  </span>
+                </div>
+              </div>
+
+              <div className="flex flex-col items-end gap-3">
+                {isPast ? (
+                  <span className="text-xs px-3 py-1 bg-gray-100 text-gray-600 rounded-full">
+                    Past
+                  </span>
+                ) : (
+                  <>
+                    <span className="text-xs px-3 py-1 bg-green-100 text-green-700 rounded-full">
+                      Upcoming
+                    </span>
+
+                    <button
+                      onClick={() => handleDeregister(event._id)}
+                      className="text-xs text-red-500 hover:text-red-700 transition"
+                    >
+                      Deregister
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    )}
+  </div>
+)}
+
 
       {role === 'club-head' && (
          <MyEvents clubHeadId={user._id} />

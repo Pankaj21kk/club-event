@@ -25,9 +25,10 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center gap-4">
+            <Link to="/" className="text-gray-600 hover:text-primary font-medium">Home</Link>
             {user ? (
                 <>
-                    <span className="text-gray-700">Hello, {user.name}</span>
+                    
                     <Link to="/profile" className="text-gray-600 hover:text-primary font-medium">Profile</Link>
                     {role === 'club-head' && (
                         <Link 
@@ -58,15 +59,15 @@ const Navbar = () => {
       </div>
        {/* Mobile Menu */}
        {isOpen && (
-        <div className="md:hidden bg-white dark:bg-secondary border-t dark:border-gray-700 px-4 pt-2 pb-4 space-y-2 shadow-lg">
+        <div className="md:hidden bg-white border-t px-4 pt-2 pb-4 space-y-2 shadow-lg">
              {user ? (
                 <>
-                    <div className="block py-2 text-gray-700 dark:text-gray-300 font-bold">Hello, {user.name}</div>
-                    <Link to="/profile" className="block py-2 text-gray-600 dark:text-gray-300 hover:text-primary">Profile</Link>
+                    <div className="block py-2 text-gray-700 font-bold">Hello, {user.name}</div>
+                    <Link to="/profile" className="block py-2 text-gray-600 hover:text-primary">Profile</Link>
                     {role === 'club-head' && (
                          <Link to="/create" className="block py-2 text-primary font-medium">Create Event</Link>
                     )}
-                     <button onClick={handleLogout} className="block w-full text-left py-2 text-gray-500 dark:text-gray-400">Logout</button>
+                     <button onClick={handleLogout} className="block w-full text-left py-2 text-gray-500">Logout</button>
                 </>
              ) : (
                  <>

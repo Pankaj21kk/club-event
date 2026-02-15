@@ -139,6 +139,40 @@ router.post("/:id/register", async (req, res) => {
   }
 });
 
+// DELETE /api/events/:id/register (Deregister)
+router.delete("/:id/register", async (req, res) => {
+  const { studentId } = req.body;
+  const eventId = req.params.id;
+
+  try {
+    const registration =
+      await require("../models/Registration").findOneAndDelete({
+        eventId,
+        studentId,
+      });
+
+    if (!registration) {
+      return res.status(404).json({ message: "Registration not found." });
+    }
+
+    const event = await Event.findById(eventId);
+    if (event) {
+      if (registration.status === "CONFIRMED") {
+        event.registeredCount = Math.max(0, event.registeredCount - 1);
+      } else {
+        event.waitingList = event.waitingList.filter(
+          (id) => id.toString() !== registration._id.toString(),
+        );
+      }
+      await event.save();
+    }
+
+    res.json({ message: "Deregistered successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 // GET /api/events/:id/registrations
 router.get("/:id/registrations", async (req, res) => {
   try {
@@ -173,6 +207,18 @@ router.get("/:id/registrations", async (req, res) => {
     );
 
     res.json(populatedRegistrations);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// GET /api/events/club-head/:clubHeadId
+router.get("/club-head/:clubHeadId", async (req, res) => {
+  try {
+    const events = await Event.find({ createdBy: req.params.clubHeadId }).sort({
+      startTime: 1,
+    });
+    res.json(events);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

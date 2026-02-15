@@ -12,6 +12,7 @@ import EditEvent from './pages/EditEvent';
 import EventRegistrations from './pages/EventRegistrations';
 import RegisterLanding from './pages/RegisterLanding';
 import ClubsPage from './pages/Clubspage';
+import Home from './pages/Home';
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
       <div className="min-h-screen bg-gray-50">
         <Navbar />
         <Routes>
-          <Route path="/" element={<EventFeed />} />
+          <Route path="/" element={<Home />} />
           <Route path="/clubs" element={<ClubsPage />} />
           <Route path="/events/:id" element={<EventDetails />} />
           <Route path="/login" element={<Login />} />

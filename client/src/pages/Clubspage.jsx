@@ -76,14 +76,14 @@ const clubsData = [
 
 const ClubsPage = () => {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-neutral-900 py-12 px-6">
+    <div className="min-h-screen bg-gray-50 py-12 px-6">
       
       {/* Page Header */}
       <div className="text-center mb-14">
-        <h1 className="text-4xl font-bold text-gray-800 dark:text-white">
+        <h1 className="text-4xl font-bold text-gray-800">
           NITJ Clubs & Societies
         </h1>
-        <p className="mt-4 text-gray-600 dark:text-gray-400">
+        <p className="mt-4 text-gray-600">
           Explore student clubs, connect with coordinators, and join activities.
         </p>
       </div>
@@ -93,22 +93,22 @@ const ClubsPage = () => {
         {clubsData.map((club) => (
           <div
             key={club.id}
-            className="bg-white dark:bg-neutral-800 rounded-2xl shadow-md hover:shadow-xl transition duration-300 p-6 flex flex-col justify-between"
+            className="bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 p-6 flex flex-col justify-between"
           >
             <div>
               <span className="inline-block mb-3 px-3 py-1 text-xs font-semibold bg-indigo-100 text-indigo-600 rounded-full">
                 {club.category}
               </span>
 
-              <h2 className="text-xl font-semibold text-gray-800 dark:text-white">
+              <h2 className="text-xl font-semibold text-gray-800">
                 {club.club_name}
               </h2>
 
-              <p className="text-sm text-gray-600 dark:text-gray-400 mt-3">
+              <p className="text-sm text-gray-600 mt-3">
                 {club.description}
               </p>
 
-              <div className="mt-4 text-sm text-gray-700 dark:text-gray-300 space-y-1">
+              <div className="mt-4 text-sm text-gray-700 space-y-1">
                 <p>
                   <strong>Faculty:</strong>{" "}
                   {club.faculty_coordinators.join(", ")}
@@ -124,7 +124,7 @@ const ClubsPage = () => {
             </div>
 
             {/* Join Button */}
-            <button className="mt-6 w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg transition">
+            <button className="mt-6 w-full bg-primary hover:opacity-90 text-white py-2 rounded-lg transition">
               Join Club
             </button>
           </div>

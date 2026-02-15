@@ -15,7 +15,7 @@ const EventCard = ({ event, onRegister, isRegistered }) => {
 
     
     return (
-        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 transition hover:shadow-xl flex flex-col h-full">
+        <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200 transition hover:shadow-xl flex flex-col h-full">
             <div className="p-6 flex-1 flex flex-col">
                 <div className="flex justify-between items-start mb-4">
                     <div>
@@ -35,13 +35,13 @@ const EventCard = ({ event, onRegister, isRegistered }) => {
                                 ENDED
                             </span>
                         )}
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h3>
+                        <h3 className="text-xl font-bold text-gray-900">{title}</h3>
                     </div>
                 </div>
                 
-                <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2 flex-grow">{description}</p>
+                <p className="text-gray-600 mb-4 line-clamp-2 flex-grow">{description}</p>
                 
-                <div className="space-y-2 text-sm text-gray-500 dark:text-gray-400 mb-6">
+                <div className="space-y-2 text-sm text-gray-500 mb-6">
                     <div className="flex items-center gap-2">
                         <Clock className="w-4 h-4" />
                         <span>{formattedTime}</span>
@@ -63,7 +63,7 @@ const EventCard = ({ event, onRegister, isRegistered }) => {
 
                 <div className="mt-auto">
                 {isRegistered ? (
-                     <div className="block w-full text-center py-2 px-4 rounded-lg font-semibold bg-green-100 text-green-700 border border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800 cursor-default">
+                     <div className="block w-full text-center py-2 px-4 rounded-lg font-semibold bg-green-100 text-green-700 border border-green-200 cursor-default">
                          Registered
                      </div>
                 ) : (
@@ -71,9 +71,9 @@ const EventCard = ({ event, onRegister, isRegistered }) => {
                     to={`/events/${_id}`}
                     className={`block w-full text-center py-2 px-4 rounded-lg font-semibold transition text-white ${
                         status === 'ENDED' 
-                        ? 'bg-gray-400 cursor-not-allowed dark:bg-gray-600'
+                        ? 'bg-gray-400 cursor-not-allowed'
                         : isFull 
-                            ? 'bg-orange-500 hover:bg-orange-600 dark:bg-orange-600'
+                            ? 'bg-orange-500 hover:bg-orange-600'
                             : 'bg-primary hover:opacity-90'
                     }`}
                     >

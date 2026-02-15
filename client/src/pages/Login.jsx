@@ -36,110 +36,126 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
-          Sign in to CampusPulse
-        </h2>
-      </div>
+  <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    
+    <div className="sm:mx-auto sm:w-full sm:max-w-md">
+      <h2 className="text-center text-3xl font-bold text-gray-800">
+        Sign in to CampusPulse
+      </h2>
+    </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white dark:bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10 border dark:border-gray-700">
-          <div className="flex justify-center mb-6">
-            <div className="inline-flex rounded-md shadow-sm" role="group">
-              <button
-                type="button"
-                onClick={() => setRole('student')}
-                className={`px-4 py-2 text-sm font-medium border rounded-l-lg ${
-                  role === 'student' 
-                    ? 'bg-primary text-white border-primary' 
-                    : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
-                }`}
-              >
-                Student
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole('club-head')}
-                className={`px-4 py-2 text-sm font-medium border rounded-r-lg ${
-                  role === 'club-head' 
-                    ? 'bg-primary text-white border-primary' 
-                    : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
-                }`}
-              >
-                Club Head
-              </button>
-            </div>
-          </div>
+    <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="bg-white py-8 px-6 shadow-xl rounded-xl border border-gray-200">
 
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            {error && <div className="text-red-500 text-sm text-center">{error}</div>}
-            
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email Address</label>
-              <div className="mt-1">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm dark:bg-gray-700 dark:text-white"
-                  value={formData.email}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
-              <div className="mt-1">
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary focus:border-primary sm:text-sm dark:bg-gray-700 dark:text-white"
-                  value={formData.password}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
-              >
-                Sign in
-              </button>
-            </div>
-          </form>
-
-          <div className="mt-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
-                  Or register
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-6 grid grid-cols-2 gap-3">
-              <Link to="/register/student" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary bg-indigo-50 hover:bg-indigo-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600">
-                As Student
-              </Link>
-              <Link to="/register/club-head" className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary bg-indigo-50 hover:bg-indigo-100 dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600">
-                As Club Head
-              </Link>
-            </div>
+        {/* Role Toggle */}
+        <div className="flex justify-center mb-6">
+          <div className="inline-flex rounded-lg overflow-hidden border border-gray-300">
+            <button
+              type="button"
+              onClick={() => setRole('student')}
+              className={`px-4 py-2 text-sm font-medium transition ${
+                role === 'student'
+                  ? 'bg-primary text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              Student
+            </button>
+            <button
+              type="button"
+              onClick={() => setRole('club-head')}
+              className={`px-4 py-2 text-sm font-medium transition ${
+                role === 'club-head'
+                  ? 'bg-primary text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-100'
+              }`}
+            >
+              Club Head
+            </button>
           </div>
         </div>
+
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          
+          {error && (
+            <div className="text-red-500 text-sm text-center font-medium">
+              {error}
+            </div>
+          )}
+
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Email Address
+            </label>
+            <input
+              name="email"
+              type="email"
+              required
+              value={formData.email}
+              onChange={handleChange}
+              className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Password
+            </label>
+            <input
+              name="password"
+              type="password"
+              required
+              value={formData.password}
+              onChange={handleChange}
+              className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+            />
+          </div>
+
+          {/* Submit */}
+          <button
+            type="submit"
+            className="w-full py-2 px-4 rounded-lg text-white bg-primary hover:bg-primary transition shadow-md"
+          >
+            Sign In
+          </button>
+        </form>
+
+        {/* Divider */}
+        <div className="mt-6 relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300"></div>
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white text-gray-500">
+              Or register
+            </span>
+          </div>
+        </div>
+
+        {/* Register Links */}
+        <div className="mt-6 grid grid-cols-2 gap-3">
+          <Link
+            to="/register/student"
+            className="text-center py-2 px-4 rounded-lg border-2 border-primary text-primary   transition"
+          >
+            As Student
+          </Link>
+
+          <Link
+            to="/register/club-head"
+            className="text-center py-2 px-4 rounded-lg border-2 border-primary text-primary  transition"
+          >
+            As Club Head
+          </Link>
+        </div>
+
       </div>
     </div>
-  );
+  </div>
+);
+
 };
 
 export default Login;
